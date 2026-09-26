@@ -19,6 +19,10 @@
 * **Dual-Mode Operation**:
   * `create`: Greenfield scaffolding (code + AI configurations from scratch).
   * `retrofit` / `add`: Brownfield detection and injection into existing codebases.
+* **Bidirectional Sync & Evolution**: Support non-destructive 3-way updates from upstream templates, personal override layers, and `export-back` commands to extract working project rules into a central library.
+* **Provenance & Lineage Tracking**: Every imported rule or skill must track its origin, license, upstream commit hash, and personal modification history in frontmatter metadata and `registry.lock`.
+
+
 
 ---
 

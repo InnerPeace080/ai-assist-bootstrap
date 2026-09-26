@@ -34,6 +34,14 @@ Welcome to the documentation for **ai-assist-bootstrap**, a modular project gene
 6. **[06. Workflow Check Gates & Agent Hooks](./06-workflow-check-gates-and-hooks.md)**
    Multi-tier quality gate defense architecture: agent tool hooks (`PreToolUse`, `hooks.json`), repository Git hooks (`Lefthook` / `Husky`), gatekeeper/reviewer subagents, and CI/CD safe-outputs.
 
+7. **[07. Bidirectional Sync & Personal Overrides](./07-bidirectional-sync-and-personal-overrides.md)**
+   Continuous evolution architecture: 3-way merge model (`copier`/`cruft` pattern) for non-destructive upstream updates, 3-tier configuration hierarchy (Base → Personal Global → Project Local), and `export-back` / `save-preset` CLI commands to extract working project rules into a central library.
+
+8. **[08. Provenance Tracking & Source Lineage](./08-provenance-tracking-and-source-lineage.md)**
+   Tracking community origins, upstream commit hashes, licenses, and personal modification history via in-file YAML frontmatter and central `registry.lock` bill of materials.
+
+
+
 
 ---
 
