@@ -13,17 +13,27 @@ Welcome to the documentation for **ai-assist-bootstrap**, a modular project gene
    Detailed design of the bootstrapping engine: Progressive Disclosure principle, Single-Source-of-Truth (SSOT) compilation model, multi-agent export strategy (`AGENTS.md`, `.cursor/rules`, `.claude/`, `.agents/skills`, Copilot), and dual-mode (`create` vs `retrofit`).
 
 3. **[03. Stack Profiles](./03-stack-profiles.md)**
-   Specifications, coding invariants, rule sets, and recommended skills for each supported project stack:
-   - Next.js (Fullstack / React 19 / App Router)
-   - NestJS (Enterprise Backend / TypeScript)
-   - React Native & Expo (Cross-Platform Mobile)
-   - Turborepo Monorepo (Multi-app / Shared packages)
+   Specifications, coding invariants, rule sets, and recommended skills for 10 supported project stacks:
+   - **Next.js** (Fullstack / React 19 / App Router)
+   - **NestJS** (Enterprise Backend / TypeScript)
+   - **React Native & Expo** (Cross-Platform Mobile)
+   - **Turborepo Monorepo** (Multi-app / Shared packages)
+   - **React.js SPA** (Vite / TanStack Query / Zustand)
+   - **Golang** (Go 1.23+ / Chi / sqlc / Table Tests)
+   - **Python** (FastAPI / Pydantic v2 / uv / SQLAlchemy 2)
+   - **Rust** (Cargo / Axum / Tokio / sqlx / thiserror)
+   - **Erlang** (OTP 26+ / rebar3 / Supervision Trees)
+   - **Shell Scripting** (Bash 5+ / POSIX / shellcheck / bats-core)
 
 4. **[04. Workflows & Skills Catalog](./04-workflows-and-skills-catalog.md)**
-   In-depth specifications for core orchestration workflows (`plan-execute-verify`, `tdd-workflow`, `git-conventions-pr`, `security-guardrails`, `spec-driven-development` via Spec Kit, and `gsd-context-reset` via Get Shit Done) and catalog of stack-specific agent skills adhering to the open `SKILL.md` progressive disclosure standard.
+   In-depth specifications for core orchestration workflows (`plan-execute-verify`, `tdd-workflow`, `git-conventions-pr`, `security-guardrails`, `spec-driven-development` via Spec Kit, and `gsd-context-reset` via Get Shit Done) and catalog of 26 stack-specific agent skills adhering to the open `SKILL.md` progressive disclosure standard.
 
 5. **[05. Roadmap & Implementation Plan](./05-roadmap-and-implementation.md)**
    Implementation blueprints, project structure, CLI technology options (Node/TS vs Shell vs Hybrid), phase-by-phase milestones, and testing strategy.
+
+6. **[06. Workflow Check Gates & Agent Hooks](./06-workflow-check-gates-and-hooks.md)**
+   Multi-tier quality gate defense architecture: agent tool hooks (`PreToolUse`, `hooks.json`), repository Git hooks (`Lefthook` / `Husky`), gatekeeper/reviewer subagents, and CI/CD safe-outputs.
+
 
 ---
 
@@ -38,12 +48,13 @@ Welcome to the documentation for **ai-assist-bootstrap**, a modular project gene
          |                                                   |
          v                                                   v
    [ Project Scaffolder ]                             [ AI Engine ]
-   * Next.js (App Router)                             * Rules (Scoped .mdc, AGENTS.md)
-   * NestJS (Modular API)                             * Skills (Progressive SKILL.md)
-   * React Native (Expo)                              * Workflows (Plan/Execute, TDD)
-   * Monorepo (Turborepo + pnpm)                      * Tools & MCP (Databases, GitHub)
+   * Next.js, React SPA, Expo                         * Rules (Scoped .mdc, AGENTS.md)
+   * NestJS, Golang, Python, Rust, Erlang, Shell      * Skills (Progressive SKILL.md)
+   * Monorepo (Turborepo + pnpm)                      * Workflows (Plan/Execute, TDD)
+   * Tooling (pnpm, uv, cargo, rebar3, go, bats)      * Tools & MCP (Databases, GitHub)
          |                                                   |
          +-------------------------+-------------------------+
+
                                    |
                                    v
              [ Ready-to-Code Production Repository ]

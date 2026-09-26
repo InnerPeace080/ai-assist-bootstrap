@@ -1,6 +1,8 @@
 # ai-assist-bootstrap
 
-> **Bootstrap modern software projects (Next.js, NestJS, React Native, Monorepos) with production-ready AI skills, rules, workflows, and tool configurations.**
+> **Bootstrap modern software projects (Next.js, NestJS, React Native, Monorepo, React SPA, Go, Python, Rust, Erlang, Shell) with production-ready AI skills, rules, workflows, and tool configurations.**
+
+
 
 ---
 
