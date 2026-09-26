@@ -23,26 +23,30 @@ Workflows establish behavioral guardrails for AI agents, transforming ad-hoc cod
 ---
 
 ### Workflow 1: `plan-execute-verify`
+
+
 **Goal**: Prevent "cowboy coding" where an agent prematurely edits files without understanding system constraints.
 
 * **Phase 1: Research & Discovery**
-  - Read relevant files, dependencies, and configuration.
-  - Check existing patterns, shared utilities, and conventions.
-  - Never modify code during this phase.
+  * Read relevant files, dependencies, and configuration.
+  * Check existing patterns, shared utilities, and conventions.
+  * Never modify code during this phase.
 * **Phase 2: Technical Specification & Plan**
-  - Write a phased implementation plan.
-  - Identify breaking changes, risks, and edge cases.
-  - Present the plan to the developer for feedback/confirmation.
+  * Write a phased implementation plan.
+  * Identify breaking changes, risks, and edge cases.
+  * Present the plan to the developer for feedback/confirmation.
 * **Phase 3: Atomic Execution**
-  - Implement step-by-step in small, verifiable chunks.
-  - Run typechecks (`tsc --noEmit`) and linter (`eslint`) after each step.
+  * Implement step-by-step in small, verifiable chunks.
+  * Run typechecks (`tsc --noEmit`) and linter (`eslint`) after each step.
 * **Phase 4: Verification & Self-Review**
-  - Execute test suites (`pnpm test`).
-  - Run git diff to audit changes against unintended edits.
+  * Execute test suites (`pnpm test`).
+  * Run git diff to audit changes against unintended edits.
 
 ---
 
+
 ### Workflow 2: `tdd-workflow`
+
 **Goal**: Maximize AI correctness by anchoring code changes to automated test feedback.
 
 ```
@@ -69,29 +73,70 @@ Workflows establish behavioral guardrails for AI agents, transforming ad-hoc cod
 
 ---
 
-### Workflow 3: `git-conventions-pr`
-**Goal**: Maintain a clean, auditable version control history.
 
-* **Commit Message Standard**:
-  - Follow [Conventional Commits](https://www.conventionalcommits.org/):
-    - `feat(scope): ...`
-    - `fix(scope): ...`
-    - `refactor(scope): ...`
-    - `test(scope): ...`
-    - `docs(scope): ...`
-    - `chore(scope): ...`
-  - Body must explain the *why*, not just the *what*.
+### Workflow 3: `git-conventions-pr`
+
+***oal**: Maintain a clean, auditable version control history.
+*
+* ***ommit Message Standard**:
+  * *ollow [Conventional Commits](https://www.conventionalcommits.org/):
+    * `feat(scope): ...`
+    * `fix(scope): ...`
+    * `refactor(scope): ...`
+  * * `test(scope): ...`
+    * `docs(scope): ...`
+  * * `chore(scope): ...`
+  * Body must explain the *why*, not just the *what*.
 * **Pull Request Template Generator**:
-  - Includes summary of changes, motivation, testing proofs (command outputs / screenshots), and checklist (tests passing, linter clean, docs updated).
+  * Includes summary of changes, motivation, testing proofs (command outputs / screenshots), and checklist (tests passing, linter clean, docs updated).
+
 
 ---
 
 ### Workflow 4: `security-guardrails`
+
 **Goal**: Enforce local security and privacy boundaries on AI agent operations.
 
 * **Secret Detection**: Block agent tools from reading or printing `.env*`, private keys (`id_rsa`), or AWS/cloud credentials.
 * **Command Sandboxing**: Require confirmation for destructive operations (`rm -rf`, `DROP TABLE`, `git push --force`).
 * **Dependency Hygiene**: Check newly introduced packages against known CVE databases (`pnpm audit`).
+
+
+---
+
+### Workflow 5: `spec-driven-development` (from GitHub Spec Kit)
+
+**Goal**: Eliminate "vibe coding" on non-trivial features by anchoring execution to persistent, versionable specifications.
+
+``*
+[ 1. Constitution ] ──> [ 2. Specify (What/Why) ] ──> [ 3. Plan (How) ] ──> [ 4. Tasks (Checklist) ] ──> [ 5. Implement & Converge ]
+``*
+
+* **Constitution (`CONSTITUTION.md`)**:
+  * Encodes immutable team architectural principles (e.g., zero runtime `any`, strict accessibility, DB transactions for multi-row writes).
+* **Specification (`.specify/specs/<feature>.md`)**:
+  * Focuses on *user value* and *acceptance criteria* (Given/When/Then), not raw code.
+* **Technical Plan (`.specify/plans/<feature>.md`)**:
+  * Outlines architecture, schema changes, API endpoints, and dependency decisions.
+* **Task Decomposition (`.specify/tasks/<feature>.md`)**:
+  * Breaks work down into atomic, testable items with explicit dependencies.
+* **Convergence Phase**:
+
+  * Formal comparison between the generated code and the original specification before marking the feature complete.
+
+---
+
+### Workflow 6: `gsd-context-reset` (from Get Shit Done / Open GSD)
+
+**Goal**: Eliminate "Context Rot" in long agentic coding sessions through fresh-context subagent execution.
+
+* **The Problem**: After 10+ turns of code generation, diffing, and error fixing, the context window fills with noise. The model's attention degrades, leading to circular loops and hallucinations.
+* **The GSD Solution**:
+  1. **Persistent State Markers**: Progress is tracked in `.gsd/STATE.md` and `ROADMAP.md` in the repository, NOT in the ephemeral chat history.
+  2. **Isolated Task Execution**: Instead of running an entire 5-step feature in one long chat, each task is dispatched to a **clean, fresh subagent context**.
+  3. **Atomic State Handoff**: The subagent reads the state marker, completes its single focused task, commits its diff, updates `STATE.md`, and terminates cleanly.
+* **Lifecycle**:
+  $$\text{Discuss} \longrightarrow \text{Plan} \longrightarrow \text{Execute (Fresh Subagent Context)} \longrightarrow \text{Verify} \longrightarrow \text{Ship}$$
 
 ---
 
@@ -118,12 +163,14 @@ Trigger conditions explaining the precise scenarios requiring this runbook.
 
 ## Best Practices & Anti-Patterns
 - DO: ...
+
 - DON'T: ...
 
 ## Code Examples
 ```language
 // Practical reference implementation
 ```
+
 ```
 
 ### Why This Format?

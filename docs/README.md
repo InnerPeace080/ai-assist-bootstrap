@@ -20,7 +20,7 @@ Welcome to the documentation for **ai-assist-bootstrap**, a modular project gene
    - Turborepo Monorepo (Multi-app / Shared packages)
 
 4. **[04. Workflows & Skills Catalog](./04-workflows-and-skills-catalog.md)**
-   In-depth specifications for core orchestration workflows (`plan-execute-verify`, `tdd-workflow`, `git-conventions-pr`, `security-guardrails`) and catalog of stack-specific agent skills adhering to the open `SKILL.md` progressive disclosure standard.
+   In-depth specifications for core orchestration workflows (`plan-execute-verify`, `tdd-workflow`, `git-conventions-pr`, `security-guardrails`, `spec-driven-development` via Spec Kit, and `gsd-context-reset` via Get Shit Done) and catalog of stack-specific agent skills adhering to the open `SKILL.md` progressive disclosure standard.
 
 5. **[05. Roadmap & Implementation Plan](./05-roadmap-and-implementation.md)**
    Implementation blueprints, project structure, CLI technology options (Node/TS vs Shell vs Hybrid), phase-by-phase milestones, and testing strategy.
