@@ -75,10 +75,13 @@ ai-assist-bootstrap/
 │   ├── scaffolder.ts                # Executes package manager / create-* commands
 │   ├── sync.ts                      # 3-Way merge updater & diff calculator
 │   ├── extractor.ts                 # `export-back` and personal preset manager (~/.ai-assist/)
-│   └── sources.ts                   # Provenance tracker, upstream diff & attribution generator
+│   ├── sources.ts                   # Provenance tracker, upstream diff & attribution generator
+│   ├── mcp.ts                       # MCP server config generator & credential isolator
+│   └── doctor.ts                    # Rule linter, dead glob detector & context budget auditor
 ├── package.json
 ├── tsconfig.json
 └── README.md
+
 ```
 
 ---
@@ -100,7 +103,7 @@ flowchart LR
 ### Phase 1: Research, Architecture & Documentation (Completed)
 - [x] Synthesize ecosystem research and competitive benchmarks.
 - [x] Formulate the Progressive Disclosure & SSOT architectural model.
-- [x] Author comprehensive documentation suite in `docs/` (01 through 08).
+- [x] Author comprehensive documentation suite in `docs/` (01 through 10).
 
 ### Phase 2: Template & Skill Catalog Creation
 - [ ] Implement canonical templates in `templates/common/` (`AGENTS.md`, `CLAUDE.md`, Copilot instructions).
@@ -124,15 +127,13 @@ flowchart LR
 - [ ] Verify generated AI configurations in Claude Code, Cursor, Antigravity, and Copilot environments.
 - [ ] Benchmark context token consumption to verify the Progressive Disclosure budget (< 500 tokens at baseline).
 
-### Phase 6: Bidirectional Sync & Provenance Engine
+### Phase 6: Evolution Engine & Diagnostics
 - [ ] Implement `ai-assist-bootstrap update` with automated 3-way merge (`copier`/`cruft` model) preserving local customizations.
-- [ ] Implement `ai-assist-bootstrap export-back [skill]` with dual destinations:
-  - Personal global library (`~/.ai-assist/`)
-  - Direct upstream Git repository (`--to-git --push` or `--to-git --pr` via `gh`)
-- [ ] Implement `ai-assist-bootstrap sources list` & `sources diff` to audit provenance and personal customizations.
-- [ ] Implement `ai-assist-bootstrap sources check-updates` to check community repos for newer upstream commits.
+- [ ] Implement `ai-assist-bootstrap export-back [skill]` with dual destinations (`~/.ai-assist/` and `--to-git`).
+- [ ] Implement `ai-assist-bootstrap sources list`, `diff`, `check-updates`, and `credit`.
+- [ ] Implement `ai-assist-bootstrap doctor` to audit context budgets, validate frontmatter, and detect dead globs.
 - [ ] Implement pre-export secret & sensitive keyword sanitization guardrail.
-- [ ] Implement `sources credit` to generate automated `ATTRIBUTION.md`.
+
 
 
 

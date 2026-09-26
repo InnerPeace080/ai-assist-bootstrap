@@ -40,6 +40,13 @@ Welcome to the documentation for **ai-assist-bootstrap**, a modular project gene
 8. **[08. Provenance Tracking & Source Lineage](./08-provenance-tracking-and-source-lineage.md)**
    Tracking community origins, upstream commit hashes, licenses, and personal modification history via in-file YAML frontmatter and central `registry.lock` bill of materials.
 
+9. **[09. MCP Servers & Tool Integrations](./09-mcp-servers-and-tool-integrations.md)**
+   Dynamic tool integrations across Claude Code, Cursor, and Antigravity: PostgreSQL/SQLite schema inspectors, Playwright browser test runners, Context7 live docs, and GitHub automation.
+
+10. **[10. Rule Linting & Diagnostics (`doctor`)](./10-rule-linting-and-diagnostics.md)**
+    Automated health diagnostic suite (`ai-assist-bootstrap doctor`): context budgeting audits (< 80 lines), dead glob detection, schema validation, and contradiction checks.
+
+
 
 
 
