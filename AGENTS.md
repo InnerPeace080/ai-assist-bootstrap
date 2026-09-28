@@ -49,4 +49,6 @@
 * **Workflow Check Gates & Hooks**: Enforce multi-tier gates before commits (agent `PreToolUse` hooks, Lefthook git hooks, reviewer subagent convergence checks, secret scanners).
 * **Verification First**: Verify changes using stack test suites before committing.
 * **Conventional Commits**: Format commits with `feat:`, `fix:`, `refactor:`, `test:`, `docs:`, `chore:`.
+* **Design-First Phase**: Always finalize architecture and specifications in `docs/` before modifying templates, code, or scripts.
+* **Reliable File Operations**: Avoid IDE GUI diff replacement tools that trigger desynchronization/approval errors; apply file changes directly and deterministically.
 
