@@ -166,11 +166,176 @@ When agents operate in autonomous pipelines (e.g. GitHub Actions with `gh-aw`):
 
 ---
 
-## 6. Integration in `ai-assist-bootstrap`
+## 6. Agent Harness Workflow & Custom Gateway Script (Agent Checkpoint)
 
-When bootstrapping a project (`create` or `retrofit` mode), `ai-assist-bootstrap` will configure:
+In production agentic architectures (e.g. automated evaluation suites, SWE-bench runners, continuous coding bots, and parallel fleet execution), agents operate within an outer **Agent Harness**. 
+
+The harness is the runtime scaffolding that drives the agent through a task's full lifecycle. Rather than allowing the agent to self-declare completion or push changes unchecked, the harness enforces a deterministic **Agent Checkpoint Step** via a **User-Customizable Gateway Script**.
+
+```
++─────────────────────────────────────────────────────────────────────────────────────────────────+
+|                                    AGENT HARNESS WORKFLOW                                       |
++─────────────────────────────────────────────────────────────────────────────────────────────────+
+
+  [ Task Ingestion ] ──> [ Plan Phase ] ──> [ Atomic Execution ] 
+                                                   │
+                                                   ▼
+                                     ┌───────────────────────────┐
+                                     │   AGENT CHECKPOINT STEP   │
+                                     │ (Invokes Gateway Script)  │
+                                     └─────────────┬─────────────┘
+                                                   │
+                         ┌─────────────────────────┴─────────────────────────┐
+                         ▼                                                   ▼
+                [ Exit 0: PASS ]                                    [ Exit != 0: REJECTED ]
+                         │                                                   │
+                         ▼                                                   ▼
+           ┌───────────────────────────┐                       ┌───────────────────────────┐
+           │ Record State Checkpoint   │                       │ Structured Feedback Loop  │
+           │ Update .agents/checkpoint │                       │ Harness feeds stderr/logs │
+           │ Advance to Commit/PR/Next │                       │ Agent self-corrects       │
+           └───────────────────────────┘                       │ (Retry budget: 1..3)      │
+                                                               └─────────────┬─────────────┘
+                                                                             │
+                                                                   ┌─────────┴─────────┐
+                                                                   ▼                   ▼
+                                                            [ Retries Left ]    [ Budget Exceeded ]
+                                                            Agent refines code  Rollback to Last Good
+                                                            Re-runs checkpoint  Checkpoint & Escalate
+```
+
+### 6.1 The Gateway Script Contract
+
+The Gateway Script (e.g., `./scripts/agent-checkpoint-gateway.sh` or `.agents/checkpoints/gateway.sh`) is a user-defined executable that acts as the ultimate gatekeeper for the checkpoint step.
+
+#### Execution Context & Environment Variables
+When the harness reaches an agent checkpoint, it invokes the gateway script with standard environment variables:
+
+| Variable | Description | Example |
+| :--- | :--- | :--- |
+| `AGENT_TASK_ID` | Identifier of the active task or ticket | `task-auth-042` |
+| `AGENT_PHASE` | Current harness execution phase | `implementation`, `refactor`, `pre-commit` |
+| `AGENT_CHECKPOINT_NAME` | Name of the milestone or gate being evaluated | `unit-tests-and-lint`, `contract-verification` |
+| `GIT_BASE_COMMIT` | Base Git commit hash before the agent began edits | `a1b2c3d` |
+| `HARNESS_RETRY_COUNT` | Current retry attempt index (0-indexed) | `1` |
+
+#### Standardized Exit Code Semantics
+
+The gateway script must follow deterministic exit code conventions:
+
+* **Exit Code `0` (`CHECKPOINT_PASS`)**:
+  - The checkpoint criteria are fully satisfied (e.g., all tests pass, zero lint errors, schema matches specification).
+  - The harness records the checkpoint snapshot and allows the workflow to progress to the next phase or finalize the commit.
+* **Exit Code `2` (`CHECKPOINT_BLOCKED_RETRYABLE`)**:
+  - Verification failed, but the failure is recoverable (e.g., test assertion failure, typecheck error, unformatted file).
+  - The harness intercepts `stdout` and `stderr`, formats the output as structured diagnostic feedback (`[CHECKPOINT GATEWAY FAILED] ...`), and presents it back to the agent for self-correction.
+* **Exit Code `1` or `>2` (`CHECKPOINT_FATAL_HALT`)**:
+  - Unrecoverable or security policy violation (e.g., secret detected, forbidden dependency added, destructive file operation).
+  - The harness halts immediately, aborts the task, rolls back changes, and alerts a human operator (Human-in-the-Loop escalation).
+
+---
+
+### 6.2 Checkpoint State Persistence & Rollback Mechanics
+
+To prevent context rot and cascading regressions:
+1. **Checkpoint Lock (`.agents/checkpoints/checkpoint.lock`)**:
+   - Stores the timestamp, current git SHA, task ID, and passing test summary when a checkpoint passes.
+2. **Deterministic Rollback**:
+   - If an agent fails the gateway check repeatedly and exhausts its retry budget (`maxRetries`, default: 3):
+   - The harness rolls back uncommitted working directory edits to the last passing checkpoint:
+     ```bash
+     git reset --hard "$LAST_GOOD_CHECKPOINT_SHA"
+     git clean -fd
+     ```
+   - This prevents corrupted state from poisoning subsequent subagents or tasks.
+
+---
+
+### 6.3 Configuration in `ai-assist.json`
+
+Users configure their custom gateway script and checkpoint policy in `ai-assist.json`:
+
+```json
+{
+  "$schema": "./schema/config.schema.json",
+  "project": {
+    "name": "my-nestjs-backend",
+    "type": "nestjs"
+  },
+  "harness": {
+    "enabled": true,
+    "gatewayScript": "./scripts/agent-checkpoint-gateway.sh",
+    "checkpointDir": ".agents/checkpoints",
+    "maxRetries": 3,
+    "timeoutSeconds": 300,
+    "rollbackOnFailure": true,
+    "strictMode": true
+  }
+}
+```
+
+---
+
+### 6.4 Reference Implementation: Custom Gateway Script
+
+Below is a reference implementation of `scripts/agent-checkpoint-gateway.sh` designed for NestJS projects:
+
+```bash
+#!/usr/bin/env bash
+# scripts/agent-checkpoint-gateway.sh
+# Custom Agent Checkpoint Gateway Script for NestJS Projects
+set -euo pipefail
+
+echo "============================================================"
+echo " [GATEWAY] Evaluating Agent Checkpoint: ${AGENT_CHECKPOINT_NAME:-default}"
+echo " Task ID: ${AGENT_TASK_ID:-unknown} (Attempt: ${HARNESS_RETRY_COUNT:-0})"
+echo "============================================================"
+
+# Step 1: Secret Scan on Uncommitted / Staged Edits
+echo "--> Step 1/4: Scanning for hardcoded secrets..."
+if git diff --cached -S"sk_live_" -S"ghp_" -S"AKIA" --quiet; then
+  echo "    [OK] No common secret patterns detected in diff."
+else
+  echo "    [FATAL] Detected possible secret token in git diff!" >&2
+  exit 1 # Fatal Halt
+fi
+
+# Step 2: Strict Typechecking
+echo "--> Step 2/4: Running TypeScript strict compilation..."
+if ! pnpm exec tsc --noEmit; then
+  echo "    [FAIL] TypeScript compilation failed. Fix type errors above." >&2
+  exit 2 # Retryable Block
+fi
+
+# Step 3: Lint & Formatting
+echo "--> Step 3/4: Checking ESLint rules..."
+if ! pnpm lint; then
+  echo "    [FAIL] ESLint reported violations. Fix lint rules before checkpoint." >&2
+  exit 2 # Retryable Block
+fi
+
+# Step 4: Unit Test Suite
+echo "--> Step 4/4: Running automated test suite..."
+if ! pnpm test -- --bail; then
+  echo "    [FAIL] Unit tests failed. Fix failing test cases." >&2
+  exit 2 # Retryable Block
+fi
+
+echo "============================================================"
+echo " [GATEWAY] All Checkpoint Gates Passed Successfully!"
+echo "============================================================"
+exit 0
+```
+
+---
+
+## 7. Integration in `ai-assist-bootstrap`
+
+When bootstrapping or retrofitting a project (`create` or `retrofit` mode), `ai-assist-bootstrap` will configure:
 1. **Agent Tool Hook**: Interceptor script `.claude/hooks/pre-commit-gate.sh` blocking premature agent commits.
 2. **Git Hook Runner**: Pre-configured `lefthook.yml` or `husky` matching the chosen stack.
-3. **Reviewer Subagent Template**: Pre-configured Critic/Reviewer persona definition (`.claude/agents/code-reviewer.md` or `.agents/skills/code-review/SKILL.md`).
-4. **Secret Scanner**: Out-of-the-box secret check blocking `.env` commits.
+3. **Custom Gateway Script**: Scaffolds `scripts/agent-checkpoint-gateway.sh` linked in `ai-assist.json` for deterministic harness checkpoints.
+4. **Reviewer Subagent Template**: Pre-configured Critic/Reviewer persona definition (`.claude/agents/code-reviewer.md` or `.agents/skills/code-review/SKILL.md`).
+5. **Secret Scanner**: Out-of-the-box secret check blocking `.env` commits.
+
 

@@ -143,13 +143,20 @@ When generated, a lightweight manifest is saved at the root:
   "workflows": [
     "plan-execute-verify",
     "tdd-workflow",
-    "git-conventions-pr"
+    "git-conventions-pr",
+    "agent-checkpoint-harness"
   ],
   "skills": [
     "nextjs-app-router",
     "tailwind-shadcn",
     "security-audit"
   ],
+  "harness": {
+    "enabled": true,
+    "gatewayScript": "./scripts/agent-checkpoint-gateway.sh",
+    "maxRetries": 3,
+    "rollbackOnFailure": true
+  },
   "mcp": {
     "enabled": ["filesystem", "postgres"]
   }
@@ -157,7 +164,8 @@ When generated, a lightweight manifest is saved at the root:
 ```
 
 This manifest allows:
-1. Re-syncing rules when `ai-assist-bootstrap update` is run.
-2. Adding new skills on-the-fly (`ai-assist-bootstrap add-skill stripe-integration`).
-3. Seamless onboarding for team members.
+1. Re-syncing rules when `ai-assist update` is run.
+2. Customizing agent checkpoint verification via `harness.gatewayScript`.
+3. Adding new skills on-the-fly (`ai-assist add-skill ...`).
+4. Seamless onboarding for team members.
 

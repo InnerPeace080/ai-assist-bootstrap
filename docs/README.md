@@ -32,7 +32,7 @@ Welcome to the documentation for **ai-assist-bootstrap**, a modular project gene
    Implementation blueprints, project structure, CLI technology options (Node/TS vs Shell vs Hybrid), phase-by-phase milestones, and testing strategy.
 
 6. **[06. Workflow Check Gates & Agent Hooks](./06-workflow-check-gates-and-hooks.md)**
-   Multi-tier quality gate defense architecture: agent tool hooks (`PreToolUse`, `hooks.json`), repository Git hooks (`Lefthook` / `Husky`), gatekeeper/reviewer subagents, and CI/CD safe-outputs.
+   Multi-tier quality gate defense architecture: agent tool hooks (`PreToolUse`, `hooks.json`), repository Git hooks (`Lefthook` / `Husky`), gatekeeper/reviewer subagents, **Agent Harness Workflows with User-Customizable Gateway Scripts (Agent Checkpoints)**, and CI/CD safe-outputs.
 
 7. **[07. Bidirectional Sync & Personal Overrides](./07-bidirectional-sync-and-personal-overrides.md)**
    Continuous evolution architecture: 3-way merge model (`copier`/`cruft` pattern) for non-destructive upstream updates, 3-tier configuration hierarchy (Base → Personal Global → Project Local), and `export-back` / `save-preset` CLI commands to extract working project rules into a central library.
@@ -45,6 +45,10 @@ Welcome to the documentation for **ai-assist-bootstrap**, a modular project gene
 
 10. **[10. Rule Linting & Diagnostics (`doctor`)](./10-rule-linting-and-diagnostics.md)**
     Automated health diagnostic suite (`ai-assist-bootstrap doctor`): context budgeting audits (< 80 lines), dead glob detection, schema validation, and contradiction checks.
+
+11. **[11. Agent Fleet & Parallel Orchestration](./11-agent-fleet-and-parallel-orchestration.md)**
+    Parallel multi-agent execution framework using isolated Git worktrees ("One Task, One Branch, One Worktree"), DAG task dispatch, and automated integration pipelines.
+
 
 
 
