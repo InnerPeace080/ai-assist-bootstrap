@@ -62,6 +62,30 @@ class TestAiAssistEngine(unittest.TestCase):
         self.assertEqual(report.error_count, 0)
         self.assertEqual(report.warning_count, 0)
 
+    def test_compiler_and_doctor_nestjs(self):
+        nest_dir = self.test_dir / "nest_sub"
+        config = CompilerConfig(
+            project_dir=nest_dir,
+            project_name="my-nestjs-app",
+            stack_id="nestjs",
+            templates_root=self.templates_root,
+        )
+        files = compile_project(config)
+        self.assertIn("AGENTS.md", files)
+        self.assertIn("CLAUDE.md", files)
+        self.assertIn(".agents/skills/nestjs-module-architect/SKILL.md", files)
+        self.assertIn("ai-assist.json", files)
+
+        # Create a matching file so cursor glob is satisfied
+        src_dir = nest_dir / "src"
+        src_dir.mkdir(parents=True, exist_ok=True)
+        (src_dir / "app.module.ts").write_text("export class AppModule {}\n")
+
+        # Run doctor
+        report = run_doctor(nest_dir, self.templates_root / "registry.lock")
+        self.assertEqual(report.error_count, 0)
+        self.assertEqual(report.warning_count, 0)
+
     def test_doctor_detects_context_budget_overflow(self):
         agents_file = self.test_dir / "AGENTS.md"
         # Write 100 lines

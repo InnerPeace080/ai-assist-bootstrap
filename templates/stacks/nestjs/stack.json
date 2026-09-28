@@ -21,10 +21,7 @@
     "Configuration and environment variables must be accessed via ConfigService with typed validation schemas."
   ],
   "defaultSkills": [
-    "nestjs-module-architect",
-    "db-prisma-migration",
-    "api-testing",
-    "security-audit"
+    "nestjs-module-architect"
   ],
   "defaultWorkflows": [
     "plan-execute-verify",
