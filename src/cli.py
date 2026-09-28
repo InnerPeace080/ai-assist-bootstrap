@@ -7,6 +7,7 @@ run doctor health audits, sync templates, and manage community source lineage.
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from pathlib import Path
 
@@ -16,18 +17,28 @@ from .doctor import print_doctor_report, run_doctor
 from .sources import diff_skill, generate_attribution, list_sources
 from .sync import diff_project, export_back
 
-SUPPORTED_STACKS = [
-    ("nextjs", "Next.js 15+ App Router, Server Actions, React 19, Zod"),
-    ("nestjs", "NestJS modular architecture, DTO validation, Prisma/TypeORM"),
-    ("react-native", "Expo Router, React Native, NativeWind, SafeArea"),
-    ("monorepo", "Turborepo + pnpm workspaces, strict package boundaries"),
-    ("reactjs", "React Vite SPA, TanStack Query v5, Zustand"),
-    ("golang", "Go 1.23+, cmd/ + internal/, %w wrapping, structured concurrency"),
-    ("python", "Python 3.12+, FastAPI, Pydantic v2, uv, ruff, async SQLAlchemy"),
-    ("rust", "Rust 1.83+ Axum, Tokio, thiserror, zero unwrap in production"),
-    ("erlang", "Erlang/OTP 26+, supervisor trees, gen_server, let-it-crash"),
-    ("shell", "Modular Bash 5+ bin/ + lib/, getopts, shellcheck, bats-core"),
-]
+
+def get_supported_stacks(template_root: Path | None = None) -> list[tuple[str, str]]:
+    """Returns list of (stack_id, description) discovered dynamically from templates/stacks."""
+    if template_root is None:
+        template_root = get_template_root()
+    stacks_dir = template_root / "stacks"
+    stacks: list[tuple[str, str]] = []
+    if stacks_dir.is_dir():
+        for s_dir in sorted(stacks_dir.iterdir()):
+            stack_json = s_dir / "stack.json"
+            if s_dir.is_dir() and stack_json.is_file():
+                try:
+                    with open(stack_json, "r", encoding="utf-8") as f:
+                        data = json.load(f)
+                        summary = data.get("summary") or data.get("title") or ""
+                        stacks.append((data.get("id", s_dir.name), summary))
+                except Exception:
+                    stacks.append((s_dir.name, ""))
+    return stacks
+
+
+SUPPORTED_STACKS = get_supported_stacks()
 
 
 def cmd_create(args: argparse.Namespace) -> int:
@@ -39,10 +50,15 @@ def cmd_create(args: argparse.Namespace) -> int:
         print(f"Error: Directory '{args.name}' already exists and is not empty.")
         return 1
 
+    supported = get_supported_stacks(template_root)
+    supported_map = dict(supported)
+
     stack_id = args.stack
-    if not stack_id:
+    if not stack_id or stack_id not in supported_map:
+        if stack_id:
+            print(f"Error: Unknown stack profile '{stack_id}'.")
         print("Please choose a stack profile using --stack <id>:")
-        for s_id, s_desc in SUPPORTED_STACKS:
+        for s_id, s_desc in supported:
             print(f"  • \033[1m{s_id:<14}\033[0m : {s_desc}")
         return 1
 
@@ -78,11 +94,28 @@ def cmd_add(args: argparse.Namespace) -> int:
     print(f"\nInspecting codebase at {target_dir}...")
     detection = detect_project(target_dir)
 
-    stack_id = args.stack or detection.stack_id
+    supported = get_supported_stacks(template_root)
+    supported_map = dict(supported)
+
+    stack_id = args.stack or (
+        detection.stack_id if detection.stack_id in supported_map else None
+    )
     if not stack_id:
-        print("\033[33mCould not automatically determine project stack.\033[0m")
-        print("Please specify a stack profile manually using --stack <id>:")
-        for s_id, s_desc in SUPPORTED_STACKS:
+        if detection.stack_id and detection.stack_id not in supported_map:
+            print(
+                f"\033[33mDetected stack '{detection.stack_id}', but template profile is not installed.\033[0m"
+            )
+        else:
+            print("\033[33mCould not automatically determine project stack.\033[0m")
+        print("Please specify a supported stack profile manually using --stack <id>:")
+        for s_id, s_desc in supported:
+            print(f"  • \033[1m{s_id:<14}\033[0m : {s_desc}")
+        return 1
+
+    if stack_id not in supported_map:
+        print(f"Error: Unknown stack profile '{stack_id}'.")
+        print("Supported stack profiles:")
+        for s_id, s_desc in supported:
             print(f"  • \033[1m{s_id:<14}\033[0m : {s_desc}")
         return 1
 
@@ -175,10 +208,13 @@ def cmd_diff(args: argparse.Namespace) -> int:
 
 
 def cmd_list_stacks(_: argparse.Namespace) -> int:
-    """Lists all 10 supported technology stacks."""
-    print("\nSupported Technology Stacks (10 Profiles):")
+    """Lists all available technology stacks."""
+    template_root = get_template_root()
+    stacks = get_supported_stacks(template_root)
+    count_label = f"({len(stacks)} Profile{'s' if len(stacks) != 1 else ''})"
+    print(f"\nSupported Technology Stacks {count_label}:")
     print("─" * 70)
-    for s_id, s_desc in SUPPORTED_STACKS:
+    for s_id, s_desc in stacks:
         print(f"  • \033[1m{s_id:<14}\033[0m : {s_desc}")
     print("─" * 70 + "\n")
     return 0
@@ -209,7 +245,7 @@ def cmd_list_skills(_: argparse.Namespace) -> int:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog="ai-assist",
-        description="ai-assist-bootstrap: Multi-agent AI configuration engine across 10 technology stacks",
+        description="ai-assist-bootstrap: Multi-agent AI configuration engine across technology stacks",
     )
     subparsers = parser.add_subparsers(dest="subcommand", help="Available subcommands")
 
@@ -219,7 +255,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     p_create.add_argument("name", help="Name of new project directory")
     p_create.add_argument(
-        "--stack", "-s", help="Stack profile (e.g. golang, python, nextjs, rust)"
+        "--stack", "-s", help="Stack profile (e.g. nestjs)"
     )
     p_create.add_argument(
         "--package-manager", "-p", help="Package manager to configure"

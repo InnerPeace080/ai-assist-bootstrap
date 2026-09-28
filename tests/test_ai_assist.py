@@ -44,7 +44,7 @@ class TestAiAssistEngine(unittest.TestCase):
         config = CompilerConfig(
             project_dir=self.test_dir,
             project_name="my-test-app",
-            stack_id="golang",
+            stack_id="nestjs",
             templates_root=self.templates_root,
         )
         files = compile_project(config)
@@ -52,10 +52,10 @@ class TestAiAssistEngine(unittest.TestCase):
         self.assertIn("CLAUDE.md", files)
         self.assertIn("ai-assist.json", files)
 
-        # Create a matching go file so glob is satisfied
-        pkg_dir = self.test_dir / "cmd" / "server"
+        # Create a matching nestjs file so glob is satisfied
+        pkg_dir = self.test_dir / "src"
         pkg_dir.mkdir(parents=True, exist_ok=True)
-        (pkg_dir / "main.go").write_text("package main\n\nfunc main() {}\n")
+        (pkg_dir / "app.module.ts").write_text("export class AppModule {}\n")
 
         # Run doctor
         report = run_doctor(self.test_dir, self.templates_root / "registry.lock")
