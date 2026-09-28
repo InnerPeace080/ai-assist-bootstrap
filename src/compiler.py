@@ -11,7 +11,7 @@ import json
 import shutil
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 DIRECTORY_TREES = {
     "nextjs": """app/
@@ -116,14 +116,14 @@ class CompilerConfig:
     project_name: str
     stack_id: str
     templates_root: Path
-    package_manager: Optional[str] = None
+    package_manager: str | None = None
     custom_skills: list[str] = field(default_factory=list)
     targets: list[str] = field(
         default_factory=lambda: ["claude", "cursor", "antigravity", "copilot"]
     )
 
 
-def get_template_root(start_dir: Optional[Path] = None) -> Path:
+def get_template_root(start_dir: Path | None = None) -> Path:
     """Finds the templates directory either locally or relative to this script."""
     current = Path(__file__).resolve().parent.parent / "templates"
     if current.is_dir():
@@ -195,6 +195,16 @@ def compile_project(config: CompilerConfig) -> list[str]:
     with open(target_claude, "w", encoding="utf-8") as f:
         f.write(claude_content)
     generated_files.append("CLAUDE.md")
+
+    # Copy Custom Slash Commands (.claude/commands/)
+    if "claude" in config.targets:
+        commands_src = config.templates_root / "commands"
+        if commands_src.is_dir():
+            claude_commands_dir = root / ".claude" / "commands"
+            claude_commands_dir.mkdir(parents=True, exist_ok=True)
+            for cmd_file in sorted(commands_src.glob("*.md")):
+                shutil.copyfile(cmd_file, claude_commands_dir / cmd_file.name)
+                generated_files.append(f".claude/commands/{cmd_file.name}")
 
     # 3. Compile GitHub Copilot instructions
     if "copilot" in config.targets:
