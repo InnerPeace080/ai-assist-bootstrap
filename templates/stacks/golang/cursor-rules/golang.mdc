@@ -1,0 +1,14 @@
+---
+description: Go idiomatic standards, error wrapping, and structured concurrency
+globs: ["**/*.go"]
+alwaysApply: false
+---
+
+# Go Coding Standards
+
+- **Error Handling**: Explicitly check errors. Wrap with `%w` for context: `fmt.Errorf("context: %w", err)`. Never discard errors with `_`. Never panic in production handlers.
+- **Directory Layout**: Use `cmd/` for main binaries, `internal/` for private domain logic.
+- **Context**: Pass `ctx context.Context` as the first argument in I/O operations.
+- **Concurrency**: Avoid goroutine leaks. Always coordinate lifecycles with `sync.WaitGroup`, `errgroup.Group`, or context cancellation.
+- **Tests**: Use table-driven tests (`tests := []struct{...}`). Run `go test -race ./...`.
+

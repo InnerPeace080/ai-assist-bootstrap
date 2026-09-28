@@ -1,0 +1,14 @@
+---
+description: NestJS modular architecture, dependency injection, and DTO validation standards
+globs: ["src/**/*.ts"]
+alwaysApply: false
+---
+
+# NestJS Architecture Standards
+
+- **Module Encapsulation**: Keep modules self-contained (`*.module.ts`, `*.controller.ts`, `*.service.ts`). Export only providers that other modules explicitly need.
+- **DTO Validation**: Every input payload must be typed with a DTO class using `class-validator` (`@IsString()`, `@IsNotEmpty()`, etc.).
+- **Dependency Injection**: Always inject dependencies into constructor parameters with proper access modifiers (`private readonly service: MyService`).
+- **Error Handling**: Throw explicit NestJS HTTP exceptions (`NotFoundException`, `ForbiddenException`). Never let uncaught database exceptions bubble directly to clients.
+- **Testing**: Co-locate unit test specs (`*.service.spec.ts`) with service files.
+

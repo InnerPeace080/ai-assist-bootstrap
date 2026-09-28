@@ -1,0 +1,14 @@
+---
+description: Python FastAPI, Pydantic v2, uv, and async standards
+globs: ["**/*.py"]
+alwaysApply: false
+---
+
+# Python FastAPI Standards
+
+- **Environment & CLI**: Always invoke commands with `uv run` (`uv run pytest`, `uv run ruff check .`).
+- **Pydantic v2**: Use Pydantic v2 models for all request bodies and responses (`response_model=...`).
+- **Type Hints**: Use modern Python 3.10+ syntax (`X | None`). Do NOT use `Any`.
+- **Layered Structure**: Follow `Router` → `Service` → `Repository`. Keep database queries in repositories/services.
+- **Async Hygiene**: Use async SQLAlchemy 2.0 with `AsyncSession`. Offload blocking CPU or sync I/O via `asyncio.to_thread()`.
+

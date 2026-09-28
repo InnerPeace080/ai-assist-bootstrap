@@ -1,0 +1,36 @@
+{
+  "id": "monorepo",
+  "title": "Turborepo + pnpm Workspaces",
+  "language": "typescript",
+  "packageManager": "pnpm",
+  "commands": {
+    "install": "pnpm install",
+    "dev": "pnpm turbo dev",
+    "test": "pnpm turbo test",
+    "lint": "pnpm turbo lint",
+    "typecheck": "pnpm turbo typecheck",
+    "build": "pnpm turbo build"
+  },
+  "testFramework": "Vitest / Jest per package",
+  "summary": "Turborepo, pnpm workspaces, shared UI and contract packages",
+  "rules": [
+    "Strict package boundaries: apps never import directly from sibling app directories.",
+    "Shared types and contracts live in packages/shared-types and must be imported via package exports.",
+    "Ensure all turbo.json pipeline tasks declare inputs and outputs for cache integrity.",
+    "Root AGENTS.md controls global workspace rules; app-level rules overlay local concerns."
+  ],
+  "defaultSkills": [
+    "security-audit"
+  ],
+  "defaultWorkflows": [
+    "plan-execute-verify",
+    "tdd-workflow",
+    "git-conventions-pr",
+    "quality-check-gates"
+  ],
+  "mcp": [
+    "context7",
+    "github"
+  ]
+}
+

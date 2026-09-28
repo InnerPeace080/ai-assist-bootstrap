@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Resolve canonical repository root
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do
+  DIR="$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
+done
+REPO_ROOT="$(cd -P "$(dirname "$SOURCE")/.." >/dev/null 2>&1 && pwd)"
+
+# Ensure python3 is available
+if ! command -v python3 >/dev/null 2>&1; then
+  echo "Error: python3 is required to run ai-assist." >&2
+  exit 1
+fi
+
+export PYTHONPATH="${REPO_ROOT}:${PYTHONPATH:-}"
+exec python3 -m src.cli "$@"
+

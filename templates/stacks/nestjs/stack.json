@@ -1,0 +1,41 @@
+{
+  "id": "nestjs",
+  "title": "NestJS (Enterprise Modular Backend)",
+  "language": "typescript",
+  "packageManager": "pnpm",
+  "commands": {
+    "install": "pnpm install",
+    "dev": "pnpm start:dev",
+    "test": "pnpm test",
+    "lint": "pnpm lint",
+    "typecheck": "pnpm exec tsc --noEmit",
+    "build": "pnpm build"
+  },
+  "testFramework": "Jest unit tests + Supertest E2E",
+  "summary": "NestJS 10+, TypeScript (Strict), Prisma / TypeORM, Class-Validator, Jest",
+  "rules": [
+    "Enforce module boundaries: every domain entity lives in its own module with dedicated controller, service, and DTOs.",
+    "Controllers strictly handle routing and request mapping; business logic and DB transactions belong in services.",
+    "Every incoming request payload must use a validated DTO class with class-validator decorators.",
+    "Use standard NestJS HTTP exceptions (NotFoundException, BadRequestException, etc.). Never expose raw DB errors.",
+    "Configuration and environment variables must be accessed via ConfigService with typed validation schemas."
+  ],
+  "defaultSkills": [
+    "nestjs-module-architect",
+    "db-prisma-migration",
+    "api-testing",
+    "security-audit"
+  ],
+  "defaultWorkflows": [
+    "plan-execute-verify",
+    "tdd-workflow",
+    "git-conventions-pr",
+    "quality-check-gates"
+  ],
+  "mcp": [
+    "postgres",
+    "context7",
+    "github"
+  ]
+}
+

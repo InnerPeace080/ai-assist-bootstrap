@@ -1,0 +1,39 @@
+{
+  "id": "erlang",
+  "title": "Erlang/OTP 26+ (rebar3 + Cowboy)",
+  "language": "erlang",
+  "packageManager": "rebar3",
+  "commands": {
+    "install": "rebar3 compile",
+    "dev": "rebar3 shell",
+    "test": "rebar3 eunit && rebar3 ct",
+    "lint": "rebar3 as test elvis rock",
+    "typecheck": "rebar3 dialyzer",
+    "build": "rebar3 as prod release"
+  },
+  "testFramework": "EUnit (unit) + Common Test (integration)",
+  "summary": "Erlang/OTP 26+, rebar3, supervision trees, Dialyzer -spec types",
+  "rules": [
+    "OTP Supervision: All long-running processes must be placed under an OTP supervisor ('let it crash').",
+    "GenServer callbacks separation: Strictly separate public API (call/cast) from server callbacks.",
+    "Pattern matching in function heads and guards over nested case/if statements.",
+    "Declare -spec type specifications for all exported functions to ensure clean Dialyzer runs."
+  ],
+  "defaultSkills": [
+    "erlang-otp-design",
+    "erlang-genserver",
+    "erlang-testing",
+    "security-audit"
+  ],
+  "defaultWorkflows": [
+    "plan-execute-verify",
+    "tdd-workflow",
+    "git-conventions-pr",
+    "quality-check-gates"
+  ],
+  "mcp": [
+    "context7",
+    "github"
+  ]
+}
+

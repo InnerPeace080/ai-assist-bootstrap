@@ -1,71 +1,120 @@
 # ai-assist-bootstrap
 
-> **Bootstrap modern software projects (Next.js, NestJS, React Native, Monorepo, React SPA, Go, Python, Rust, Erlang, Shell) with production-ready AI skills, rules, workflows, and tool configurations.**
-
-
+> **Bootstrap modern software projects across 10 technology stacks with production-ready AI skills, scoped rules, workflows, quality check gates, and MCP configurations.**
 
 ---
 
 ## 🚀 Overview
 
-`ai-assist-bootstrap` bridges the gap between modern application code scaffolding and AI-assisted development. Instead of having to manually configure prompt files, skills, and rules across different AI tools, `ai-assist-bootstrap` provides an automated, modular, and context-budgeted system for teams using:
+`ai-assist-bootstrap` bridges the gap between software development and multi-agent AI coding assistants. Instead of manually configuring and maintaining ad-hoc prompt files across different AI tools, `ai-assist-bootstrap` provides an automated, modular, context-budgeted, and verifiable configuration engine for:
 
-* **Claude Code** (`CLAUDE.md`, `.claude/` skills, commands, hooks)
-* **Cursor** (`.cursor/rules/*.mdc` with scoped glob matching)
 * **Antigravity / Gemini CLI** (`AGENTS.md`, `.agents/skills/*/SKILL.md`)
+* **Claude Code** (`CLAUDE.md`, `.claude/` skills, commands, PreToolUse hooks)
+* **Cursor** (`.cursor/rules/*.mdc` with scoped glob matching)
 * **GitHub Copilot** (`.github/copilot-instructions.md`)
 * **Windsurf & Devin** (Universal `AGENTS.md`)
 
 ---
 
-## ⚡ Key Highlights
+## ⚡ Key Architectural Highlights
 
-1. **Context Budgeting & Progressive Disclosure**: Prevents "prompt bloat" by enforcing lean global rules (< 75 lines) and loading detailed runbooks (`SKILL.md`) on demand.
-2. **Single Source of Truth (SSOT)**: Write rules once; compile and synchronize them across all target AI assistants.
-3. **Dual Mode**:
-   - **`create`**: Scaffold new projects from scratch (Next.js, NestJS, Expo, Turborepo Monorepo) pre-wired with AI configs.
-   - **`retrofit` / `add`**: Detect tech stack in an existing project and inject tailored AI rules and skills without altering business logic.
-4. **Structured Workflows**: Built-in orchestration patterns:
-   - `plan-execute-verify`: Phased discipline (Research → Plan → Atomic Execution → Review).
-   - `tdd-workflow`: Test-driven development for verifiable code changes.
-   - `git-conventions-pr`: Conventional commits and structured pull request descriptions.
-   - `security-guardrails`: Secret isolation, audit hooks, and command sandboxing.
-
----
-
-## 📖 Documentation Suite
-
-The complete research, specifications, and guides are organized in the [`docs/`](./docs/README.md) directory:
-
-| Document                                                                         | Description                                                                                                                        |
-| :------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------- |
-| **[01. Research & Benchmarks](./docs/01-research-and-benchmarks.md)**            | Comparative analysis of existing templates (`claude-code-template`, `claude-code-best-practices`, `versoxbt`, `superpowers`, etc.) |
-| **[02. Architecture & Design](./docs/02-architecture-and-design.md)**            | System design, Progressive Disclosure model, compiler pipeline, and `ai-assist.json` manifest                                      |
-| **[03. Stack Profiles](./docs/03-stack-profiles.md)**                            | Rules, invariants, and skills for Next.js, NestJS, React Native (Expo), and Turborepo                                              |
-| **[04. Workflows & Skills Catalog](./docs/04-workflows-and-skills-catalog.md)**  | Core agent workflows (`plan-execute`, `tdd`, `git`) and curated `SKILL.md` runbooks                                                |
-| **[05. Roadmap & Implementation Plan](./docs/05-roadmap-and-implementation.md)** | Architecture evaluation, directory structure, milestones, and implementation phases                                                |
+1. **Context Budgeting & Progressive Disclosure**: Prevents prompt dilution by enforcing lean global rules (< 80 lines) in `AGENTS.md` / `CLAUDE.md` and loading deep procedures on-demand via `.agents/skills/<name>/SKILL.md`.
+2. **Single Source of Truth (SSOT)**: Canonical stack definitions compile cleanly into all agent target formats.
+3. **10 Production-Ready Stacks**:
+   - **Next.js 15+**: App Router, Server Actions, React 19 RSC boundaries, Zod validation.
+   - **NestJS**: TypeScript modular architecture, class-validator DTOs, Prisma / TypeORM.
+   - **React Native & Expo**: Expo Router v3/v4, typed routes, NativeWind, SafeArea.
+   - **Monorepo**: Turborepo + pnpm workspaces, strict package boundaries.
+   - **React.js SPA**: Vite, TanStack Query v5 (query key factories, no useEffect fetching), Zustand.
+   - **Golang**: Go 1.23+, `cmd/` + `internal/`, explicit `%w` wrapping, structured concurrency with `context.Context`.
+   - **Python**: Python 3.12+, FastAPI, Pydantic v2, `uv` package manager, `ruff`, async SQLAlchemy 2.0.
+   - **Rust**: Rust 1.83+, Axum 0.7+, Tokio, `thiserror` domain errors, zero `.unwrap()` in production.
+   - **Erlang**: OTP 26+, `rebar3`, supervision trees, map-based child specs, GenServer callback separation.
+   - **Shell Scripting**: Bash 5+ / POSIX, `set -euo pipefail`, modular `bin/` + `lib/`, `getopts`, `shellcheck`, `bats-core`.
+4. **Automated Diagnostic Suite (`doctor`)**: Audits context budgets, catches dead globs, validates frontmatter schemas, scans for leaked credentials, and checks provenance.
+5. **Bidirectional Sync & Provenance Tracking**:
+   - 3-Way non-destructive merge (`copier`/`cruft` model) when updating templates.
+   - Extract project-refined rules back to local personal libraries (`~/.ai-assist/`) or push directly to the central Git repo (`export-back --to-git`).
+   - Upstream origin, commit hash, and license tracking via `templates/registry.lock` and YAML frontmatter.
 
 ---
 
-## 📁 Repository Structure
+## 💻 CLI Quickstart
 
+The CLI runs natively on Linux, macOS, and WSL without requiring external package installations:
+
+```bash
+# Display help and commands
+./bin/ai-assist --help
+
+# List all 10 supported stacks
+./bin/ai-assist list-stacks
+
+# List curated skills
+./bin/ai-assist list-skills
 ```
-ai-assist-bootstrap/
-├── docs/                            # Comprehensive documentation suite
-│   ├── README.md
-│   ├── 01-research-and-benchmarks.md
-│   ├── 02-architecture-and-design.md
-│   ├── 03-stack-profiles.md
-│   ├── 04-workflows-and-skills-catalog.md
-│   └── 05-roadmap-and-implementation.md
-├── templates/                       # Modular AI configurations & skills
-│   ├── common/                      # AGENTS.md, CLAUDE.md, copilot
-│   ├── stacks/                      # Next.js, NestJS, React Native, Monorepo
-│   ├── workflows/                   # Plan/Execute, TDD, Git/PR, Security
-│   └── skills/                      # Progressive SKILL.md runbooks
-├── bin/                             # CLI entrypoints (Node CLI & shell runner)
-├── src/                             # Scaffolder, detector, compiler, and CLI wizard
-└── README.md
+
+### 1. Create a New Project (Greenfield)
+```bash
+./bin/ai-assist create my-app --stack golang
+# Or: --stack python, nextjs, nestjs, rust, shell, etc.
+```
+
+### 2. Retrofit an Existing Codebase (Brownfield)
+```bash
+cd /path/to/my-existing-project
+/path/to/ai-assist-bootstrap/bin/ai-assist add
+# Auto-detects stack from project signatures and injects AI configurations!
+```
+
+### 3. Run Rule & Context Diagnostics (`doctor`)
+```bash
+./bin/ai-assist doctor
+# Audits context budget (<80 lines), dead globs, schema validation, and secrets
+```
+
+### 4. Extract Project Rules Back Upstream (`export-back`)
+```bash
+# Save to local personal library (~/.ai-assist/)
+./bin/ai-assist export-back my-custom-skill
+
+# Export directly to central template repository
+./bin/ai-assist export-back my-custom-skill --to-local-repo /media/Data/Codes/shell/ai-assist-bootstrap
+```
+
+### 5. Inspect Upstream Provenance & Generate Attribution
+```bash
+# List tracked sources and licenses
+./bin/ai-assist sources list
+
+# Generate Open Source ATTRIBUTION.md
+./bin/ai-assist sources credit
+```
+
+---
+
+## 📖 Master Documentation Index (`docs/`)
+
+| Document                                                                                         | Focus                                                                     |
+| :----------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------ |
+| **[01. Research & Benchmarks](./docs/01-research-and-benchmarks.md)**                            | Analysis of 14 leading AI agent configuration repos & frameworks          |
+| **[02. Architecture & Design](./docs/02-architecture-and-design.md)**                            | Progressive disclosure, SSOT compiler, and `ai-assist.json` specification |
+| **[03. Stack Profiles](./docs/03-stack-profiles.md)**                                            | Rules, invariants, and commands across all 10 supported stacks            |
+| **[04. Workflows & Skills Catalog](./docs/04-workflows-and-skills-catalog.md)**                  | 7 Core agentic workflows and catalog of 26 curated skills                 |
+| **[05. Roadmap & Implementation](./docs/05-roadmap-and-implementation.md)**                      | Phased milestones, execution strategy, and repository layout              |
+| **[06. Workflow Check Gates & Hooks](./docs/06-workflow-check-gates-and-hooks.md)**              | 4-Tier quality gate defense (PreToolUse, Lefthook, Reviewer agents)       |
+| **[07. Bidirectional Sync & Overrides](./docs/07-bidirectional-sync-and-personal-overrides.md)** | 3-way merge model and `export-back` upstream extraction                   |
+| **[08. Provenance & Source Lineage](./docs/08-provenance-tracking-and-source-lineage.md)**       | In-file frontmatter metadata and central `registry.lock` specification    |
+| **[09. MCP Servers & Integrations](./docs/09-mcp-servers-and-tool-integrations.md)**             | Contextual MCP servers (Postgres, Playwright, Context7, GitHub)           |
+| **[10. Rule Linting & Diagnostics](./docs/10-rule-linting-and-diagnostics.md)**                  | The `doctor` audit suite, dead glob detector, and budget auditor          |
+
+---
+
+## 🧪 Testing
+
+Run the automated test suite:
+```bash
+python3 -m unittest discover -s tests -p "test_*.py" -v
 ```
 
 ---
@@ -73,4 +122,3 @@ ai-assist-bootstrap/
 ## 📄 License
 
 MIT
-

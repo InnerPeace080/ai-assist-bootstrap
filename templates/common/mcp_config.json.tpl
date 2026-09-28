@@ -1,0 +1,6 @@
+{
+  "mcpServers": {
+{{MCP_SERVERS}}
+  }
+}
+

@@ -1,0 +1,184 @@
+{
+  "$schema": "./schema/registry-lock.schema.json",
+  "lockfileVersion": "1.0.0",
+  "sources": {
+    "awesome-cursorrules": {
+      "name": "Awesome CursorRules",
+      "repo": "https://github.com/PatrickJS/awesome-cursorrules",
+      "type": "git",
+      "commit": "8f391b4",
+      "license": "MIT"
+    },
+    "anthropics-skills": {
+      "name": "Anthropic Official Skills",
+      "repo": "https://github.com/anthropics/skills",
+      "type": "git",
+      "commit": "1a2b3c4",
+      "license": "Apache-2.0"
+    },
+    "trailofbits-config": {
+      "name": "Trail of Bits Claude Code Config",
+      "repo": "https://github.com/trailofbits/claude-code-config",
+      "type": "git",
+      "commit": "6e7f8a9",
+      "license": "Apache-2.0"
+    },
+    "github-spec-kit": {
+      "name": "GitHub Spec Kit",
+      "repo": "https://github.com/github/spec-kit",
+      "type": "git",
+      "commit": "9b8a7c6",
+      "license": "MIT"
+    },
+    "open-gsd": {
+      "name": "Get Shit Done Core",
+      "repo": "https://github.com/open-gsd/gsd-core",
+      "type": "git",
+      "commit": "c4d5e6f",
+      "license": "MIT"
+    },
+    "prisma-community": {
+      "name": "Prisma Relational Examples",
+      "repo": "https://github.com/prisma/prisma-examples",
+      "type": "git",
+      "commit": "3b4c5d6",
+      "license": "MIT"
+    },
+    "expo-community": {
+      "name": "Expo Router Official",
+      "repo": "https://github.com/expo/expo",
+      "type": "git",
+      "commit": "7e8f9a0",
+      "license": "MIT"
+    },
+    "golang-standards": {
+      "name": "Golang Standards Project Layout",
+      "repo": "https://github.com/golang-standards/project-layout",
+      "type": "git",
+      "commit": "4a5b6c7",
+      "license": "MIT"
+    },
+    "fastapi-community": {
+      "name": "Full Stack FastAPI Template",
+      "repo": "https://github.com/tiangolo/full-stack-fastapi-template",
+      "type": "git",
+      "commit": "5b6c7d8",
+      "license": "MIT"
+    },
+    "tokio-axum": {
+      "name": "Axum Web Framework",
+      "repo": "https://github.com/tokio-rs/axum",
+      "type": "git",
+      "commit": "2c3d4e5",
+      "license": "MIT"
+    },
+    "erlang-otp": {
+      "name": "Erlang/OTP Design Principles",
+      "repo": "https://github.com/erlang/otp",
+      "type": "git",
+      "commit": "1d2e3f4",
+      "license": "Apache-2.0"
+    },
+    "bats-core": {
+      "name": "BATS Bash Automated Testing System",
+      "repo": "https://github.com/bats-core/bats-core",
+      "type": "git",
+      "commit": "8a9b0c1",
+      "license": "MIT"
+    }
+  },
+  "artifacts": {
+    "skills/nextjs-app-router": {
+      "source": "awesome-cursorrules",
+      "upstreamPath": "rules/nextjs.mdc",
+      "lineage": "forked-and-customized",
+      "hasPersonalEdits": true,
+      "description": "Deep runbook for Next.js App Router and Server Actions"
+    },
+    "skills/nestjs-module-architect": {
+      "source": "awesome-cursorrules",
+      "upstreamPath": "rules/nestjs.mdc",
+      "lineage": "forked-and-customized",
+      "hasPersonalEdits": true,
+      "description": "NestJS modular structure and DTO validation patterns"
+    },
+    "skills/tailwind-shadcn": {
+      "source": "awesome-cursorrules",
+      "upstreamPath": "rules/tailwind.mdc",
+      "lineage": "forked-and-customized",
+      "hasPersonalEdits": true,
+      "description": "Tailwind CSS & shadcn component authoring runbook"
+    },
+    "skills/db-prisma-migration": {
+      "source": "prisma-community",
+      "upstreamPath": "databases/relational/README.md",
+      "lineage": "curated",
+      "hasPersonalEdits": true,
+      "description": "Prisma schema modeling, index optimization, and zero-downtime migrations"
+    },
+    "skills/expo-router": {
+      "source": "expo-community",
+      "upstreamPath": "packages/expo-router/README.md",
+      "lineage": "curated",
+      "hasPersonalEdits": true,
+      "description": "Expo React Native typed navigation and layout groups"
+    },
+    "skills/go-idiomatic-architecture": {
+      "source": "golang-standards",
+      "upstreamPath": "README.md",
+      "lineage": "curated",
+      "hasPersonalEdits": true,
+      "description": "Standard Go layout, constructor patterns, %w wrapping, and context"
+    },
+    "skills/fastapi-pydantic-v2": {
+      "source": "fastapi-community",
+      "upstreamPath": "backend/README.md",
+      "lineage": "curated",
+      "hasPersonalEdits": true,
+      "description": "FastAPI, Pydantic v2 validation, and async SQLAlchemy 2.0"
+    },
+    "skills/rust-axum-web": {
+      "source": "tokio-axum",
+      "upstreamPath": "examples/README.md",
+      "lineage": "curated",
+      "hasPersonalEdits": true,
+      "description": "Axum 0.7+ routing, State extractors, and thiserror IntoResponse"
+    },
+    "skills/erlang-otp-design": {
+      "source": "erlang-otp",
+      "upstreamPath": "system/doc/design_principles/README.md",
+      "lineage": "curated",
+      "hasPersonalEdits": true,
+      "description": "OTP 26+ supervision trees, map child specs, and gen_server"
+    },
+    "skills/shell-script-architecture": {
+      "source": "bats-core",
+      "upstreamPath": "README.md",
+      "lineage": "curated",
+      "hasPersonalEdits": true,
+      "description": "Modular Bash layout, getopts parsing, trap cleanup, and ShellCheck"
+    },
+    "skills/security-audit": {
+      "source": "trailofbits-config",
+      "upstreamPath": "plugins/security/README.md",
+      "lineage": "curated",
+      "hasPersonalEdits": true,
+      "description": "Secret detection, dependency auditing, and PreToolUse safety gates"
+    },
+    "workflows/spec-driven-development": {
+      "source": "github-spec-kit",
+      "upstreamPath": "specs/README.md",
+      "lineage": "curated",
+      "hasPersonalEdits": true,
+      "description": "Spec-Driven Development pipeline anchored to CONSTITUTION.md"
+    },
+    "workflows/gsd-context-reset": {
+      "source": "open-gsd",
+      "upstreamPath": "README.md",
+      "lineage": "curated",
+      "hasPersonalEdits": true,
+      "description": "Anti-context-rot subagent execution and STATE.md tracking"
+    }
+  }
+}
+

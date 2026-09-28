@@ -1,0 +1,39 @@
+{
+  "id": "react-native",
+  "title": "React Native & Expo Router",
+  "language": "typescript",
+  "packageManager": "pnpm",
+  "commands": {
+    "install": "pnpm install",
+    "dev": "pnpm start",
+    "test": "pnpm test",
+    "lint": "pnpm lint",
+    "typecheck": "pnpm exec tsc --noEmit",
+    "build": "pnpm exec eas build --profile preview"
+  },
+  "testFramework": "Jest + @testing-library/react-native",
+  "summary": "Expo SDK 52+, Expo Router, TypeScript, NativeWind, FlashList",
+  "rules": [
+    "Follow Expo Router file-based navigation in app/ folder with typed routes.",
+    "Handle iOS and Android platform divergence using Platform.OS or .android.tsx/.ios.tsx extensions.",
+    "Always wrap screens in SafeAreaProvider and useSafeAreaInsets() for edge-to-edge layouts.",
+    "Never use raw ScrollView for long dynamic lists; use FlashList or FlatList with memoized render items.",
+    "Perform native animations on UI thread using react-native-reanimated."
+  ],
+  "defaultSkills": [
+    "expo-router",
+    "mobile-perf-tuning",
+    "security-audit"
+  ],
+  "defaultWorkflows": [
+    "plan-execute-verify",
+    "tdd-workflow",
+    "git-conventions-pr",
+    "quality-check-gates"
+  ],
+  "mcp": [
+    "context7",
+    "github"
+  ]
+}
+

@@ -1,0 +1,39 @@
+{
+  "id": "shell",
+  "title": "Bash 5+ / POSIX Shell Scripting",
+  "language": "shell",
+  "packageManager": "bash",
+  "commands": {
+    "install": "chmod +x bin/*",
+    "dev": "./bin/main",
+    "test": "bats test/",
+    "lint": "shellcheck bin/* lib/* test/*.bats",
+    "typecheck": "shellcheck bin/* lib/*",
+    "build": "shfmt -w -i 2 -ci ."
+  },
+  "testFramework": "bats-core (Bash Automated Testing System)",
+  "summary": "Bash 5+ / POSIX, shellcheck, shfmt, bats-core, modular bin/ + lib/",
+  "rules": [
+    "Strict mode mandatory: #!/usr/bin/env bash followed by set -euo pipefail and IFS=$'\\n\\t'.",
+    "Quoting safety: ALWAYS double-quote variable expansions (\"$var\", \"${array[@]}\").",
+    "Deterministic script location: SCRIPT_DIR=\"$(cd \"$(dirname \"${BASH_SOURCE[0]}\")\" && pwd)\".",
+    "Cleanup traps: Use trap cleanup EXIT INT TERM for temporary files or process cleanup.",
+    "Negative Constraints: NEVER use eval, NEVER use legacy backticks (use $(...))."
+  ],
+  "defaultSkills": [
+    "shell-script-architecture",
+    "shellcheck-remediation",
+    "bats-testing",
+    "security-audit"
+  ],
+  "defaultWorkflows": [
+    "plan-execute-verify",
+    "tdd-workflow",
+    "git-conventions-pr",
+    "quality-check-gates"
+  ],
+  "mcp": [
+    "github"
+  ]
+}
+

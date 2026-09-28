@@ -1,0 +1,41 @@
+{
+  "id": "reactjs",
+  "title": "React.js SPA (Vite + TanStack Query)",
+  "language": "typescript",
+  "packageManager": "pnpm",
+  "commands": {
+    "install": "pnpm install",
+    "dev": "pnpm dev",
+    "test": "pnpm test",
+    "lint": "pnpm lint",
+    "typecheck": "pnpm exec tsc --noEmit",
+    "build": "pnpm build"
+  },
+  "testFramework": "Vitest + React Testing Library",
+  "summary": "React 19 / 18, Vite, TypeScript, Tailwind CSS, TanStack Query v5, Zustand",
+  "rules": [
+    "Organize by feature domain: src/features/[feature]/components/, api/, hooks/.",
+    "Server State vs Client State: TanStack Query v5 for ALL server data; Zustand ONLY for local/global UI state.",
+    "Negative Constraint: NEVER duplicate server state in Zustand or useState.",
+    "Negative Constraint on useEffect: Do NOT use useEffect for data fetching or computing derived state.",
+    "Always use Query Key Factories to ensure deterministic cache invalidation."
+  ],
+  "defaultSkills": [
+    "vite-react-spa",
+    "tanstack-query-v5",
+    "tailwind-component-design",
+    "security-audit"
+  ],
+  "defaultWorkflows": [
+    "plan-execute-verify",
+    "tdd-workflow",
+    "git-conventions-pr",
+    "quality-check-gates"
+  ],
+  "mcp": [
+    "playwright",
+    "context7",
+    "github"
+  ]
+}
+
