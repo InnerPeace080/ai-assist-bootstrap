@@ -213,3 +213,66 @@ The ecosystem of AI agent configurations currently falls into three primary cate
 6. **Combat "Context Rot" via Fresh Subagent Contexts (from GSD)**:
    * Monolithic, long-running agent chats inevitably decay in reasoning quality.
    * Workflows should encourage decomposing tasks into discrete phases, resetting context or using fresh subagent invocations, and recording persistent milestones in state files (`STATE.md`, `ROADMAP.md`).
+
+---
+
+## 5. Research Benchmark: Agent Fleet Frameworks & Worktree Orchestrators
+
+As AI engineering workflows scale, single-agent architectures are being superseded by **Agent Fleets** executing tasks in parallel. Below is an analysis of leading industry implementations, frameworks, and isolation primitives:
+
+### 1. Claude Code Agent Teams & `TeammateTool` / `--worktree` (Anthropic)
+* **Architecture**: A hierarchical Team Lead agent coordinates specialized Teammates (Frontend, Backend, QA, Docs).
+* **Isolation**: Supported natively via `claude --worktree <name>`, provisioning isolated directories (`.claude/worktrees/<name>/`) and dedicated Git branches sharing the root object store.
+* **Coordination Primitives**: 13 internal lifecycle operations in `TeammateTool` (spawning, joining, shared task list, plan approval/rejection, direct & broadcast messaging).
+* **Key Takeaway for `ai-assist-bootstrap`**: Generate standard Team Lead and Teammate prompt profiles, plus automated worktree bootstrap hooks so teams can launch with zero setup friction.
+
+### 2. `ccswarm` (Open-Source Rust Worktree Orchestrator)
+* **Architecture**: A Rust-based orchestration daemon governing specialized agent pools (Frontend, Backend, DevOps, QA) using strict Git worktree isolation.
+* **Core Philosophy**: **"Sangha" Product Core**—shared acceptance criteria, evidence-backed objections, and recorded architectural decisions before merging.
+* **Key Takeaway for `ai-assist-bootstrap`**: Adopt the "One Task, One Branch, One Worktree" discipline and evidence-backed objection gates in our multi-agent workflows.
+
+### 3. Google Antigravity Subagent System
+* **Architecture**: Dynamic subagent invocation (`invoke_subagent`) with first-class workspace virtualization (`Workspace: 'inherit' | 'branch' | 'share'`).
+* **Isolation**: `'share'` creates a shared repository worktree directory, while `'branch'` provisions an isolated branch workspace.
+* **Coordination Primitives**: Reactive wakeup messaging (`send_message`), lifecycle governance (`manage_subagents`: `list`, `kill`, `kill_all`), and one-shot liveness timers (`schedule`).
+* **Key Takeaway for `ai-assist-bootstrap`**: Support native declarative workspace mapping (`Workspace: 'share'`) in generated subagent configs.
+
+### 4. OpenHands & SWE-agent (All-Hands AI)
+* **Architecture**: Autonomous coding agents operating over abstracted `LocalWorkspace` and `DockerWorkspace` environments.
+* **Multi-Agent Isolation**: Parallel agents operate in dedicated `git worktree` checkouts to prevent file race conditions and `git checkout` index lockups.
+* **Key Takeaway for `ai-assist-bootstrap`**: Explicitly enforce the rule that parallel agents must never execute `git checkout` or `git switch` across worktrees; all branch binding must happen during worktree provisioning.
+
+### 5. Multi-Agent Fleet Comparison Matrix
+
+| Framework / Tool          | Isolation Primitive         | Topology                                                 | Communication                                    | Conflict Resolution                                         |
+| :------------------------ | :-------------------------- | :------------------------------------------------------- | :----------------------------------------------- | :---------------------------------------------------------- |
+| **Claude Code Teams**     | `.claude/worktrees/*`       | Lead + Teammates                                         | Shared Task List + Direct/Broadcast Messaging    | Lead Review + Manual Merge                                  |
+| **ccswarm**               | Git Worktrees               | Pool of Specialists                                      | File Event Bus & Sangha Objections               | Evidence-backed verification gate                           |
+| **Google Antigravity**    | `branch` / `share` Worktree | Parent + Subagent Fleet                                  | Reactive Wakeup (`send_message`)                 | Parent Synthesis & Commit Gate                              |
+| **OpenHands / SWE-agent** | Worktrees + Docker          | Planner + Worker Agents                                  | Workspace Event Bus                              | Automated Test Suite Gate                                   |
+| **`ai-assist-bootstrap`** | **SSOT Worktree Manager**   | **Coordinator + Worker Fleet + Gatekeeper + Integrator** | **`.fleet/` Contracts & Reactive Event Signals** | **Sequential Rebase Pipeline + Conflict Resolver Subagent** |
+
+---
+
+## 6. Programmatic Multi-Agent Frameworks: CrewAI, LangGraph, AutoGen, Swarms & Ray
+
+In addition to developer-facing CLI tools (Claude Code, Antigravity, Cursor), the broader AI ecosystem provides programmatic frameworks for building custom multi-agent orchestration engines. When deploying agent fleets for automated software engineering (SWE), these frameworks serve as potential execution drivers:
+
+| Library / Tool    | Primary Model           | Manager Mechanism                        | Best Use Case                                                       | Fit for SWE Agent Fleets                                                                                  |
+| :---------------- | :---------------------- | :--------------------------------------- | :------------------------------------------------------------------ | :-------------------------------------------------------------------------------------------------------- |
+| **LangGraph**     | Directed graphs & state | Supervisor node / State routing          | Production workflows needing deterministic control & custom routing | ⭐ **Highest**: Cyclic graph state machine fits `plan-execute-verify` and rebase loops perfectly.          |
+| **CrewAI**        | Role-based teams        | Built-in `manager_llm` / `manager_agent` | Rapid prototyping of goal-driven agent squads                       | **High**: Role specialization (Coder, Reviewer, QA) is natural, but requires external worktree isolation. |
+| **AutoGen (AG2)** | Conversational agents   | `GroupChatManager` / Selector            | Collaborative reasoning, debate, and multi-turn negotiation         | **Medium-High**: Ideal for Gatekeeper-Coder debate rounds and multi-agent consensus before commits.       |
+| **Swarms**        | Topologies & DSLs       | `HierarchicalSwarm` / Flow DSL           | High-throughput concurrent agent pipelines                          | **Medium**: Good for fan-out worker pools, requires custom git and file isolation hooks.                  |
+| **Ray**           | Distributed Actors      | Master actor / Queue scheduler           | High-scale parallel agent fleets spanning multiple nodes/GPUs       | **Enterprise Scale**: Indispensable for running 50+ parallel SWE-bench instances across cluster workers.  |
+
+### The Critical Gap: Filesystem & Git Governance
+While frameworks like LangGraph and CrewAI provide powerful routing and conversation state machines, **they are agnostic to filesystem concurrency and Git mechanics**. When multiple agents execute terminal commands or edit code simultaneously:
+1. They risk corrupting the single `.git/index.lock`.
+2. They overwrite uncommitted changes across parallel tasks.
+3. They fail to handle branch rebase conflicts automatically.
+
+**The Role of `ai-assist-bootstrap`**:
+`ai-assist-bootstrap` provides the missing repository-level substrate for these frameworks: the **"One Task, One Branch, One Worktree"** lifecycle, standard task contracts (`.fleet/queue/*.json`), scoped Cursor/Antigravity rules, and deterministic quality gates.
+
+

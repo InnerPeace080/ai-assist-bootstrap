@@ -85,6 +85,13 @@
       "type": "git",
       "commit": "8a9b0c1",
       "license": "MIT"
+    },
+    "ccswarm": {
+      "name": "ccswarm Multi-Agent Worktree Orchestrator",
+      "repo": "https://github.com/robmorgan/ccswarm",
+      "type": "git",
+      "commit": "9f1e2d3",
+      "license": "Apache-2.0"
     }
   },
   "artifacts": {
@@ -178,6 +185,27 @@
       "lineage": "curated",
       "hasPersonalEdits": true,
       "description": "Anti-context-rot subagent execution and STATE.md tracking"
+    },
+    "workflows/agent-fleet-orchestration": {
+      "source": "ccswarm",
+      "upstreamPath": "README.md",
+      "lineage": "curated",
+      "hasPersonalEdits": true,
+      "description": "Concurrent multi-agent fleet execution with Git worktree isolation"
+    },
+    "workflows/brownfield-retrofit": {
+      "source": "local",
+      "upstreamPath": "templates/workflows/brownfield-retrofit.md",
+      "lineage": "original",
+      "hasPersonalEdits": true,
+      "description": "Interactive 4-phase reasoning procedure for retrofitting AI configs"
+    },
+    "skills/retrofit-assistant": {
+      "source": "local",
+      "upstreamPath": "templates/skills/retrofit-assistant/SKILL.md",
+      "lineage": "original",
+      "hasPersonalEdits": true,
+      "description": "On-demand runbook for guiding agent brownfield codebase retrofits"
     }
   }
 }

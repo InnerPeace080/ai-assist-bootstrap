@@ -96,8 +96,9 @@ flowchart LR
     P4["Phase 4: CLI Wizard & Retrofit"]
     P5["Phase 5: Verification & Testing"]
     P6["Phase 6: Bidirectional Sync & Provenance"]
+    P7["Phase 7: Agent Fleet & Worktree Engine"]
 
-    P1 --> P2 --> P3 --> P4 --> P5 --> P6
+    P1 --> P2 --> P3 --> P4 --> P5 --> P6 --> P7
 ```
 
 ### Phase 1: Research, Architecture & Documentation (Completed)
@@ -133,6 +134,16 @@ flowchart LR
 - [ ] Implement `ai-assist-bootstrap sources list`, `diff`, `check-updates`, and `credit`.
 - [ ] Implement `ai-assist-bootstrap doctor` to audit context budgets, validate frontmatter, and detect dead globs.
 - [ ] Implement pre-export secret & sensitive keyword sanitization guardrail.
+
+### Phase 7: Agent Fleet & Parallel Orchestration Engine
+- [x] Author comprehensive architecture design in `docs/11-agent-fleet-and-parallel-orchestration.md`.
+- [x] Create canonical workflow template in `templates/workflows/agent-fleet-orchestration.md`.
+- [ ] Implement `ai-assist fleet init` to scaffold `.fleet/` directory and configure `.worktrees/` in `.gitignore`.
+- [ ] Implement `ai-assist fleet spawn <role> <task>` creating branch and isolated Git worktree.
+- [ ] Support target agent fleet formats (Claude Code Agent Teams / `TeammateTool`, Google Antigravity `Workspace: 'share'` / `'branch'`, ccswarm).
+- [ ] Implement sequential rebase integration pipeline with automated Conflict Resolver subagent hooks.
+- [ ] Extend `ai-assist doctor` to audit fleet health (orphaned worktrees, worktree drift, secret leaks).
+
 
 
 

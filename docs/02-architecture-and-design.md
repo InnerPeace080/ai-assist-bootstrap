@@ -109,13 +109,14 @@ Instead of writing separate, drifting configuration files, `ai-assist-bootstrap`
 
 #### 2. Brownfield Retrofit (`add` / `init`)
 * Runs inside an **existing** codebase.
-* Inspects `package.json`, project tree, and dependencies to auto-detect:
-  - Framework (Next.js, NestJS, Expo, Vite, Remix, Express, etc.)
-  - Language (TypeScript, JavaScript, Python, Go)
-  - Package manager (`pnpm`, `npm`, `yarn`, `bun`)
-  - Test framework (Vitest, Jest, Playwright, Cypress)
-* Interactive prompt lets the user select which AI tools (Cursor, Claude, Antigravity, Copilot) and workflows (TDD, Plan-Execute, PR reviews) to install.
-* Injects the AI layer without modifying existing application source code.
+* **Deterministic Heuristic Pass**:
+  - Inspects `package.json`, `Cargo.toml`, `go.mod`, `pyproject.toml`, and dependency trees via `src/detector.py`.
+  - Automatically identifies framework, language, package manager, and test suites.
+  - Injects standard AI configurations without modifying application source code.
+* **Complex Polyglot & Edge-Case Architecture ("Brain vs. Hands")**:
+  - Complex real-world codebases (e.g., hybrid Next.js + FastAPI microservices, custom internal tooling, conflicting legacy prompt files) often defy static heuristic scripts.
+  - **The "Brain" (On-Demand Skill & Workflow)**: Rather than polluting global context with permanent setup instructions, an on-demand Skill (`retrofit-assistant`) and Workflow (`brownfield-retrofit`) guide the AI agent through a 4-phase reasoning cycle (Reconnaissance $\to$ Developer Interview $\to$ SSOT Synthesis $\to$ Doctor Audit).
+  - **The "Hands" (CLI & MCP Tool Layer)**: The agent executes `./bin/ai-assist` CLI commands (or calls `ai-assist mcp-server` tools) to compile configurations, validate context budgets (< 80 lines), and ensure zero secret leaks.
 
 ---
 

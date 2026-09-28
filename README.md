@@ -100,13 +100,14 @@ cd /path/to/my-existing-project
 | **[01. Research & Benchmarks](./docs/01-research-and-benchmarks.md)**                            | Analysis of 14 leading AI agent configuration repos & frameworks          |
 | **[02. Architecture & Design](./docs/02-architecture-and-design.md)**                            | Progressive disclosure, SSOT compiler, and `ai-assist.json` specification |
 | **[03. Stack Profiles](./docs/03-stack-profiles.md)**                                            | Rules, invariants, and commands across all 10 supported stacks            |
-| **[04. Workflows & Skills Catalog](./docs/04-workflows-and-skills-catalog.md)**                  | 7 Core agentic workflows and catalog of 26 curated skills                 |
+| **[04. Workflows & Skills Catalog](./docs/04-workflows-and-skills-catalog.md)**                  | 9 Core agentic workflows and catalog of 27 curated skills                 |
 | **[05. Roadmap & Implementation](./docs/05-roadmap-and-implementation.md)**                      | Phased milestones, execution strategy, and repository layout              |
 | **[06. Workflow Check Gates & Hooks](./docs/06-workflow-check-gates-and-hooks.md)**              | 4-Tier quality gate defense (PreToolUse, Lefthook, Reviewer agents)       |
 | **[07. Bidirectional Sync & Overrides](./docs/07-bidirectional-sync-and-personal-overrides.md)** | 3-way merge model and `export-back` upstream extraction                   |
 | **[08. Provenance & Source Lineage](./docs/08-provenance-tracking-and-source-lineage.md)**       | In-file frontmatter metadata and central `registry.lock` specification    |
 | **[09. MCP Servers & Integrations](./docs/09-mcp-servers-and-tool-integrations.md)**             | Contextual MCP servers (Postgres, Playwright, Context7, GitHub)           |
 | **[10. Rule Linting & Diagnostics](./docs/10-rule-linting-and-diagnostics.md)**                  | The `doctor` audit suite, dead glob detector, and budget auditor          |
+| **[11. Agent Fleet Orchestration](./docs/11-agent-fleet-and-parallel-orchestration.md)**         | Concurrent multi-agent fleets, Git worktree isolation, and rebase merge   |
 
 ---
 

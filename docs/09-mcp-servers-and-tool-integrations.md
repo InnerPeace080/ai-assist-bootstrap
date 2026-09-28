@@ -102,3 +102,36 @@ To prevent exposing database credentials or API keys to git:
 2. **Read-Only Guards**: Database MCP servers default to read-only database user credentials.
 3. **Secret Scan Gate**: Checked by Tier 2 pre-commit hooks (`gitleaks`) to ensure `mcp.json` never commits plain text secrets.
 
+---
+
+## 5. Self-Bootstrapping: `ai-assist mcp-server` vs. On-Demand Skills
+
+When an AI agent is tasked with setting up or retrofitting a complicated repository, a common architectural question arises: **Should `ai-assist-bootstrap` expose its own MCP server to guide the agent, or rely on an on-demand Skill / Workflow?**
+
+### The Architectural Trade-Off
+
+| Feature                | MCP Server (`ai-assist mcp-server`)                                                                                             | On-Demand Skill (`retrofit-assistant`)                                                                        |
+| :--------------------- | :------------------------------------------------------------------------------------------------------------------------------ | :------------------------------------------------------------------------------------------------------------ |
+| **Role**               | **Infrastructure & Tooling Layer** (The "Hands")                                                                                | **Reasoning & Methodology Layer** (The "Brain")                                                               |
+| **Setup Friction**     | ❌ **High ("Chicken-and-Egg")**: The user/agent must configure and launch an MCP server *before* their codebase is bootstrapped. | ✅ **Zero**: Plain Markdown file. Any agent reads it instantly via progressive disclosure.                     |
+| **Context Overhead**   | ⚠️ Tool schemas sit in prompt on every turn (~200 tokens).                                                                       | ✅ **Zero baseline**: Loaded strictly on-demand when the retrofit task begins.                                 |
+| **Handling Ambiguity** | ❌ Tools return structured data/errors; cannot navigate polyglot trade-offs or interview users.                                  | ✅ **Superior**: Instructs the agent on how to inspect ASTs, resolve conflicting libraries, and ask questions. |
+| **Execution Safety**   | ✅ Structured typed JSON-RPC parameters.                                                                                         | ⚠️ Agent executes bash commands (`./bin/ai-assist`) or modifies files directly.                                |
+
+### The Hybrid Solution: "Skill as the Brain, CLI/MCP as the Hands"
+
+1. **The Brain (On-Demand Skill & Workflow)**:
+   - Provide [`templates/skills/retrofit-assistant/SKILL.md`](../templates/skills/retrofit-assistant/SKILL.md) and [`templates/workflows/brownfield-retrofit.md`](../templates/workflows/brownfield-retrofit.md).
+   - The skill is **never preloaded permanently** in `AGENTS.md` (which would violate the <80-line context budget). It triggers on-demand when the agent is asked to analyze or retrofit the repo.
+   - It guides the agent through 4 phases: Reconnaissance $\to$ Developer Interview $\to$ SSOT Synthesis $\to$ Doctor Audit.
+
+2. **The Hands (CLI & MCP Tool Layer)**:
+   - In standard environments (Antigravity, Claude Code, Cursor with terminal), the agent executes `./bin/ai-assist` commands.
+   - For sandboxed IDEs or agents lacking terminal execution privileges, `ai-assist` exposes an optional `ai-assist mcp-server` providing:
+     - `ai_assist_list_stacks()`: Returns supported stack profiles and invariants.
+     - `ai_assist_get_template(stack_id)`: Fetches stack configuration templates.
+     - `ai_assist_search_skills(query)`: Finds relevant on-demand `SKILL.md` runbooks.
+     - `ai_assist_compile(config)`: Programmatically compiles files.
+     - `ai_assist_doctor(project_dir)`: Runs diagnostics on generated configs.
+
+
